@@ -12,7 +12,8 @@ jQuery(document).ready(function($) {
                 url: ajaxurl,
                 data: {
                     action: forAllImages ? 'generate_alt_for_all_images' : 'generate_alt_for_images',
-                    language: languageAttribute
+                    language: languageAttribute,
+                    nonce: pris_vars.ajax_nonce
                 },
                 success: function(response) {
                     var status = response.status;

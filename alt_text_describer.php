@@ -19,11 +19,17 @@ add_action('wp_ajax_generate_alt_for_images', 'generate_alt_for_images');
 add_action('wp_ajax_generate_alt_for_all_images', 'generate_alt_for_all_images');
 
 function generate_alt_for_images(){
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'pris-vv144-477' ) ) {
+        die( 'Unauthorized request!' );
+    }
     $language = $_POST['language'];
     $req_operations = new requests_operations();
     $req_operations->generate_alt_for_images($language);
 }
 function generate_alt_for_all_images(){
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'pris-vv144-477' ) ) {
+        die( 'Unauthorized request!' );
+    }
     $language = $_POST['language'];
     $req_operations = new requests_operations();
     $req_operations->generate_alt_for_all_images($language);
@@ -44,6 +50,9 @@ function alt_text_describer_menu() {
 }
 function enqueue_custom_scripts_and_styles() {
     wp_enqueue_script('describer-script', plugin_dir_url(__FILE__) . 'assets/describer-script.js', array('jquery'), '1.0', true);
+    wp_localize_script('describer-script', 'pris_vars', array(
+        'ajax_nonce' => wp_create_nonce('pris-vv144-477'),
+    ));
     wp_enqueue_style('describer-style', plugin_dir_url(__FILE__) . 'assets/describer-style.css', array(), '1.0', 'all');
 }
 function alt_text_describer_admin_page() {

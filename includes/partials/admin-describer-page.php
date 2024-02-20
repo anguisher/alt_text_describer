@@ -64,7 +64,7 @@ $credits_left = $req_operations->get_user_credits_by_api_key($api_key);
         </div>
     </div>
     <div id="refreshMessage"></div>
-    <h3 class="mt-30">Currently you have: <?php echo $credits_left; ?> credits</h3>
+    <h3 class="mt-30">Currently you have: <?php echo esc_html($credits_left); ?> credits</h3>
     <p class="mt-30"><strong>NOTE: Every image alt generation will cost you 1 credit for each.</strong></p>
     <h3 class="mt-30">All Processed images</h3>
     <?php $image_list_table->display(); ?>
