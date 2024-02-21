@@ -40,6 +40,14 @@ class requests_operations{
             $database_operations->save_description($image['id'], $image['url'], $response['content']);
         }
     }
+    public function make_single_request($image_url, $image_id, $language){
+        $database_operations = new database_operations();
+        $image = [];
+        $image['url'] = $image_url;
+        $image['id'] = $image_id;
+        $response = json_decode($this->getDescription($image['url'], $language)['body'], true);
+        $this->proccess_image_response($response, $image, $database_operations);
+    }
     public function make_images_request($all_images = true, $language){
         $image_operations = new image_operations();
         $database_operations = new database_operations();

@@ -23,37 +23,6 @@ $credits_left = $req_operations->get_user_credits_by_api_key($api_key);
         <div class="col-2">
             <p>Images without alt: <?php echo count($image_operations->get_list_without_alts()); ?></p>
         </div>
-        <div class="col-2">
-            <label>Select language for alternative texts:</label>
-            <select id="select_describer_language">
-                <option attr_lng="English">English</option>
-                <option attr_lng="Lithuanian">Lithuanian</option>
-                <option attr_lng="Spanish">Spanish</option>
-                <option attr_lng="French">French</option>
-                <option attr_lng="German">German</option>
-                <option attr_lng="Italian">Italian</option>
-                <option attr_lng="Portuguese">Portuguese</option>
-                <option attr_lng="Dutch">Dutch</option>
-                <option attr_lng="Swedish">Swedish</option>
-                <option attr_lng="Danish">Danish</option>
-                <option attr_lng="Norwegian">Norwegian</option>
-                <option attr_lng="Finnish">Finnish</option>
-                <option attr_lng="Icelandic">Icelandic</option>
-                <option attr_lng="Greek">Greek</option>
-                <option attr_lng="Turkish">Turkish</option>
-                <option attr_lng="Polish">Polish</option>
-                <option attr_lng="Czech">Czech</option>
-                <option attr_lng="Slovak">Slovak</option>
-                <option attr_lng="Hungarian">Hungarian</option>
-                <option attr_lng="Romanian">Romanian</option>
-                <option attr_lng="Bulgarian">Bulgarian</option>
-                <option attr_lng="Croatian">Croatian</option>
-                <option attr_lng="Slovenian">Slovenian</option>
-                <option attr_lng="Estonian">Estonian</option>
-                <option attr_lng="Latvian">Latvian</option>
-                <option attr_lng="Maltese">Maltese</option>
-            </select>
-        </div>
     </div>
     <div class="row w-100 mt-30">
         <div class="col-3 px-10">

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Alt Text Describer
 Description: Autogenerate alternative text of images in bulk for better SEO.
-Version: 1.01
+Version: 1.03
 Author: Prisakaru
 */
 
@@ -17,12 +17,13 @@ add_action('plugins_loaded', 'init_plugin');
 add_action('admin_enqueue_scripts', 'enqueue_custom_scripts_and_styles');
 add_action('wp_ajax_generate_alt_for_images', 'generate_alt_for_images');
 add_action('wp_ajax_generate_alt_for_all_images', 'generate_alt_for_all_images');
+add_action('add_attachment', 'generate_alt_on_upload');
 
 function generate_alt_for_images(){
     if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'pris-vv144-477' ) ) {
         die( 'Unauthorized request!' );
     }
-    $language = $_POST['language'];
+    $language = get_option('prisakaru_alt_describer_lang', 'English');
     $req_operations = new requests_operations();
     $req_operations->generate_alt_for_images($language);
 }
@@ -30,7 +31,7 @@ function generate_alt_for_all_images(){
     if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'pris-vv144-477' ) ) {
         die( 'Unauthorized request!' );
     }
-    $language = $_POST['language'];
+    $language = get_option('prisakaru_alt_describer_lang', 'English');
     $req_operations = new requests_operations();
     $req_operations->generate_alt_for_all_images($language);
 }
@@ -88,3 +89,11 @@ function alt_text_describer_describer_page() {
     include_once plugin_dir_path( __FILE__ ) . 'includes/partials/admin-describer-page.php';
 }
 
+function generate_alt_on_upload($attachment_id) {
+    $setting_on = get_option('prisakaru_describer_on_upload', 'false');
+    if($setting_on == 'false') return;
+    $language = get_option('prisakaru_alt_describer_lang', 'English');
+    $attachment_url = wp_get_attachment_url($attachment_id);
+    $req_operations = new requests_operations();
+    $req_operations->make_single_request($attachment_url, $attachment_id, $language);
+}
