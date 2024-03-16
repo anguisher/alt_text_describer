@@ -4,13 +4,14 @@ class requests_operations{
     public function __construct(){
 
     }
-    public function makeApiRequest($url, $data) {
+    public function makeApiRequest($url, $data, $timeout = 45) {
         $api_url = 'https://api.prisakaru.lt/' . $url;
         $response = wp_remote_post($api_url, array(
             'body' => wp_json_encode($data),
             'headers' => array(
                 'Content-Type' => 'application/json',
             ),
+            'timeout' => $timeout,
         ));
         return is_wp_error($response) ? array('error' => $response->get_error_message()) : $response;
     }
@@ -23,41 +24,41 @@ class requests_operations{
         return $this->makeApiRequest('request_description', $data);
     }
     public function generate_alt_for_images($language = "English"){
-        $this->make_images_request(false, $language);
+        $this->make_images_request($language, false);
     }
     public function generate_alt_for_all_images($language = "English") {
-        $this->make_images_request(true, $language);
+        $this->make_images_request($language, true);
     } 
-    public function proccess_image_response($response, $image, $database_operations){
-        if($response['status'] == "error"){
-            if($response['type'] == "no_credits" || $response['type'] == "no_key" || $response['type'] == "wrong_key")
+    public function proccess_image_response($response, $image, $database_operations, $is_ajax = true){
+        if($response['status'] == "error" && $is_ajax){
+            if(($response['type'] == "no_credits" || $response['type'] == "no_key" || $response['type'] == "wrong_key")){
                 wp_send_json($response);
-            if($response['type'] == "description_error")
-                $database_operations->save_description($image['id'], $image['url'], $response['content']);
+            }
+            $alt = $response['content'];
+            $database_operations->save_description($image['id'], $image['url'], $alt);
+            update_post_meta($image['id'], '_wp_attachment_image_alt', $alt);
         }
         elseif($response['status'] == "success"){
             update_post_meta($image['id'], '_wp_attachment_image_alt', $response['content']);
             $database_operations->save_description($image['id'], $image['url'], $response['content']);
         }
     }
-    public function make_single_request($image_url, $image_id, $language){
+    public function make_single_request($image_url, $image_id, $language, $is_ajax = false){
         $database_operations = new database_operations();
         $image = [];
         $image['url'] = $image_url;
         $image['id'] = $image_id;
         $response = json_decode($this->getDescription($image['url'], $language)['body'], true);
-        $this->proccess_image_response($response, $image, $database_operations);
+        $this->proccess_image_response($response, $image, $database_operations, $is_ajax);
     }
-    public function make_images_request($all_images = true, $language){
+    public function make_images_request($language, $all_images = true){
         $image_operations = new image_operations();
         $database_operations = new database_operations();
         $images = $all_images ? $image_operations->get_all_images_list() : $image_operations->get_list_without_alts();
-        $images_to_process = array_filter($images, function($image) use ($database_operations) {
-            return $database_operations->get_description($image['id']) === null;
-        });
-        $totalImages = count($images_to_process);
+        $totalImages = count($images);
         $processedImages = 0;
-        $image = reset($images_to_process);
+        $image = reset($images);
+        $response = "";
         if ($image !== false) {
             $response = json_decode($this->getDescription($image['url'], $language)['body'], true);
             $this->proccess_image_response($response, $image, $database_operations);
@@ -66,7 +67,8 @@ class requests_operations{
         wp_send_json(array(
             'status' => 'success',
             'total' => $totalImages,
-            'processed' => $processedImages
+            'processed' => $processedImages,
+            'response' => $response
         ));
     }
     function get_user_credits_by_api_key($api_key){

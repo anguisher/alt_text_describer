@@ -24,18 +24,29 @@ class database_operations {
     }
     public function save_description($image_id, $image_url, $alt_text) {
         global $wpdb;
-        $data = array(
-            'image_id' => $image_id,
-            'image_url' => $image_url,
-            'alt_text' => $alt_text
-        );
-        $format = array(
-            '%d',
-            '%s',
-            '%s'
-        );
-        
-        $wpdb->insert($this->table_name, $data, $format);
+        $existing_description = $this->get_description($image_id);
+        if ($existing_description) {
+            $data = array(
+                'image_url' => $image_url,
+                'alt_text' => $alt_text
+            );
+            $where = array(
+                'image_id' => $image_id
+            );
+            $wpdb->update($this->table_name, $data, $where);
+        } else {
+            $data = array(
+                'image_id' => $image_id,
+                'image_url' => $image_url,
+                'alt_text' => $alt_text
+            );
+            $format = array(
+                '%d',
+                '%s',
+                '%s'
+            );
+            $wpdb->insert($this->table_name, $data, $format);
+        }
     }
     public function get_descriptions() {
         global $wpdb;

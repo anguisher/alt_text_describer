@@ -2,7 +2,7 @@
 /*
 Plugin Name: Alt Text Describer
 Description: Autogenerate alternative text of images in bulk for better SEO.
-Version: 1.03
+Version: 1.04
 Author: Prisakaru
 */
 

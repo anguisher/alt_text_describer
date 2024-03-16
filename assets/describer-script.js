@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+  jQuery(document).ready(function($) {
     function generateAltForImages(forAllImages = true) {
         var totalImagesProcessed = 0;
         var languageAttribute = $("#select_describer_language option:selected").attr("attr_lng");
@@ -24,7 +24,7 @@ jQuery(document).ready(function($) {
                     }
                     totalImagesProcessed += response.processed;
                     var progressContent = 'Total images processed: ' + totalImagesProcessed + '<br><br><br>';
-                    progressContent += 'Images left to process: ' + (response.total - 1) + '<br><br>';
+                    progressContent += 'Images left to process: ' + (response.total) + '<br><br>';
                     progressContent += "Don't close this browser tab, leave it running in background, while it runs, you can navigate through other tabs.<br><br>";
                     $('#progress-body').html(progressContent);
                     if (parseInt(response.total) > 0) {

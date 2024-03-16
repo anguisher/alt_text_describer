@@ -13,7 +13,7 @@ class image_operations {
         $empty_images = [];
         foreach ($this->images as $image) {
             $alt_text = get_post_meta($image->ID, '_wp_attachment_image_alt', true);
-            if (empty($alt_text)) {
+            if (is_string($alt_text) && empty(trim($alt_text))) {
                 $this->extract_image_info($image, $empty_images);
             }
         }

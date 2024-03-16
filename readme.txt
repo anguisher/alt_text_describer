@@ -28,3 +28,13 @@ For support please mail us to: info@prisakaru.lt
 1.01
     Updated user interface
     Added language selection
+1.02
+    Improved security
+1.03
+    Added setting to turn on or off to generate alternative text on image upload
+    Moved language setting to settings tab and made it as permanent option.
+1.04
+    Resolved a deprecation error.
+    Addressed an issue in the image upload process where an error in description generation occasionally led to the deduction of 1 credit without the corresponding update to the image's alternative text.
+    Corrected a flaw that resulted in the unwarranted deduction of credits even when the API response indicated an error.
+    Fixed a bug that prevented some images from being processed through to the final image stage.

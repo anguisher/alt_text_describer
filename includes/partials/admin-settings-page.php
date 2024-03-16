@@ -15,6 +15,7 @@ $nonce = wp_create_nonce('update_api_key_nonce');
 <form method="post" action="">
     <label for="api_key">API Key:</label><br><br>
     <input style="width: 500px;" type="text" id="api_key" name="api_key" value="<?php echo esc_attr(get_option('describer_api_key')); ?>">
+    <a href="https://prisakaru.lt/account">Don't have API key? Get it here</a>
     <br><br>
     <label for="select_describer_language">Please select language for alternative texts:</label><br><br>
     <select id="select_describer_language" name="select_describer_language">
